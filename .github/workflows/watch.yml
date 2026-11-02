@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       plan_code:
-        description: planCode OVH (vide = vps-2027-model2)
+        description: planCode OVH (vide = les modèles surveillés)
         required: false
       datacenters:
         description: Codes de datacenters séparés par des espaces (vide = France)
@@ -23,6 +23,12 @@ jobs:
   watch:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    strategy:
+      # Une panne sur un modèle n'interrompt pas la surveillance des autres.
+      fail-fast: false
+      matrix:
+        # Modèles surveillés ; un lancement manuel avec plan_code n'en vérifie qu'un.
+        plan_code: ${{ fromJSON(inputs.plan_code && format('["{0}"]', inputs.plan_code) || '["vps-2027-model2", "vps-2027-model3"]') }}
     steps:
       - uses: actions/checkout@v5
       - run: ./watch.sh
@@ -30,6 +36,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           NOTIFY_USER: ${{ github.repository_owner }}
-          # Vides au déclenchement planifié : watch.sh retombe sur ses défauts.
-          PLAN_CODE: ${{ inputs.plan_code }}
+          PLAN_CODE: ${{ matrix.plan_code }}
+          # Vide au déclenchement planifié : watch.sh retombe sur la France.
           DATACENTERS: ${{ inputs.datacenters }}

@@ -1,10 +1,11 @@
 # ovh-vps-watch
 
-Alerte de réapprovisionnement d'un VPS OVH (par défaut le VPS-2 de la gamme 2027)
-dans les datacenters français.
+Alerte de réapprovisionnement des VPS-2 et VPS-3 OVH (gamme 2027) dans les
+datacenters français.
 
-Toutes les dix minutes, le workflow interroge l'API publique d'OVH, sans
-authentification :
+Toutes les dix minutes, le workflow interroge pour chaque modèle l'API publique
+d'OVH, sans authentification. La liste des modèles est la matrice `plan_code`
+du workflow :
 
 ```
 GET https://eu.api.ovh.com/v1/vps/order/rule/datacenter?ovhSubsidiary=FR&planCode=vps-2027-model2
