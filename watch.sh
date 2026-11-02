@@ -8,7 +8,9 @@ set -euo pipefail
 PLAN_CODE="${PLAN_CODE:-vps-2027-model2}"
 # Codes de l'API (champ `code`) : Gravelines, Roubaix, Strasbourg, Paris.
 DATACENTERS="${DATACENTERS:-eu-west-gra eu-west-rbx eu-west-sbg eu-west-par}"
-LABEL="${LABEL:-stock-disponible}"
+# Une étiquette par modèle : la surveillance planifiée d'un modèle ne ferme pas
+# l'issue ouverte pour un autre par un lancement manuel.
+LABEL="${LABEL:-stock-${PLAN_CODE}}"
 API="https://eu.api.ovh.com/v1/vps/order/rule/datacenter?ovhSubsidiary=FR&planCode=${PLAN_CODE}"
 CONFIGURATOR="https://www.ovhcloud.com/fr/vps/configurator/?planCode=${PLAN_CODE}"
 
